@@ -1,0 +1,28 @@
+---
+- name: Deploy Green Version
+  hosts: local
+  gather_facts: false
+  vars:
+    docker_username: "YOUR_DOCKERHUB_USERNAME"
+  
+  tasks:
+    - name: Build Green Docker Image
+      shell: |
+        cd ..
+        sed 's/VERSION_COLOR/#00FF00/g; s/VERSION_NAME/GREEN/g; s/VERSION_NUMBER/2.0/g' app/index.html > app/index-temp.html
+        mv app/index-temp.html app/index.html
+        docker build -t {{ docker_username }}/blue-green-app:green .
+      args:
+        executable: /bin/bash
+
+    - name: Push Green Image to Docker Hub
+      shell: docker push {{ docker_username }}/blue-green-app:green
+
+    - name: Deploy Green to Kubernetes
+      shell: |
+        sed 's/YOUR_DOCKERHUB_USERNAME/{{ docker_username }}/g' ../k8s/green-deployment.yaml | kubectl apply -f -
+      args:
+        executable: /bin/bash
+
+    - name: Wait for Green Deployment
+      shell: kubectl rollout status deployment/app-green

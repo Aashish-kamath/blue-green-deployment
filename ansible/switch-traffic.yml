@@ -1,0 +1,21 @@
+---
+- name: Switch Traffic Between Blue and Green
+  hosts: local
+  gather_facts: false
+  
+  tasks:
+    - name: Get current version
+      shell: kubectl get service app-service -o jsonpath='{.spec.selector.version}'
+      register: current_version
+
+    - name: Determine new version
+      set_fact:
+        new_version: "{{ 'green' if current_version.stdout == 'blue' else 'blue' }}"
+
+    - name: Switch traffic to {{ new_version }}
+      shell: |
+        kubectl patch service app-service -p '{"spec":{"selector":{"version":"{{ new_version }}"}}}'
+
+    - name: Display switch info
+      debug:
+        msg: "Traffic switched from {{ current_version.stdout }} to {{ new_version }}"

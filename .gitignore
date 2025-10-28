@@ -1,0 +1,7 @@
+terraform/.terraform*
+terraform/.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+.ansible/*
+.DS_Store
+*.log
