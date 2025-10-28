@@ -3,7 +3,7 @@
   hosts: local
   gather_facts: false
   vars:
-    docker_username: "YOUR_DOCKERHUB_USERNAME"
+    docker_username: "8164"
   
   tasks:
     - name: Build Green Docker Image
@@ -20,7 +20,7 @@
 
     - name: Deploy Green to Kubernetes
       shell: |
-        sed 's/YOUR_DOCKERHUB_USERNAME/{{ docker_username }}/g' ../k8s/green-deployment.yaml | kubectl apply -f -
+        sed 's/8164/{{ docker_username }}/g' ../k8s/green-deployment.yaml | kubectl apply -f -
       args:
         executable: /bin/bash
 
