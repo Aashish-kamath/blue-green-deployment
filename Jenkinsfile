@@ -22,7 +22,7 @@ pipeline {
         stage('Checkout SCM') {
             steps {
                 git branch: 'main', 
-                url: 'https://github.com/YOUR_USERNAME/blue-green-deployment.git'
+                url: 'https://github.com/Aashish-kamath/blue-green-deployment.git'
             }
         }
         
@@ -55,12 +55,12 @@ pipeline {
                 script {
                     if (params.DEPLOYMENT_COLOR == 'blue') {
                         sh '''
-                            sed "s/YOUR_DOCKERHUB_USERNAME/$DOCKERHUB_CREDENTIALS_USR/g" k8s/blue-deployment.yaml | kubectl apply -f -
+                            sed "s/8164/$DOCKERHUB_CREDENTIALS_USR/g" k8s/blue-deployment.yaml | kubectl apply -f -
                             kubectl rollout status deployment/app-blue
                         '''
                     } else {
                         sh '''
-                            sed "s/YOUR_DOCKERHUB_USERNAME/$DOCKERHUB_CREDENTIALS_USR/g" k8s/green-deployment.yaml | kubectl apply -f -
+                            sed "s/8164/$DOCKERHUB_CREDENTIALS_USR/g" k8s/green-deployment.yaml | kubectl apply -f -
                             kubectl rollout status deployment/app-green
                         '''
                     }
